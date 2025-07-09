@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>GlowCare - Skin Care Product Prompt Generator</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header styling with glassmorphism effect */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        /* Container with modern card design */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Form styling with modern aesthetics */
+        .form-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-section h2 {
+            color: #4a5568;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Modern form grid layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Modern input styling */
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Modern button styling */
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Generated prompts section */
+        .prompts-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .prompts-section h2 {
+            color: #4a5568;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Prompt display cards */
+        .prompt-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .prompt-card:hover {
+            transform: translateX(5px);
+        }
+
+        .prompt-card h3 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .prompt-card p {
+            color: #4a5568;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        /* Copy button for prompts */
+        .copy-btn {
+            background: #48bb78;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #38a169;
+            transform: translateY(-1px);
+        }
+
+        /* Enhanced responsive design for mobile devices */
+        @media (max-width: 768px) {
+            /* Mobile header adjustments */
+            .header {
+                padding: 1.5rem 0;
+                margin-bottom: 2rem;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+            
+            /* Container adjustments for mobile */
+            .container {
+                padding: 0 1rem;
+            }
+            
+            /* Form section mobile optimizations */
+            .form-section, .prompts-section {
+                padding: 1.5rem;
+                margin: 0 0 2rem 0;
+                border-radius: 15px;
+            }
+            
+            .form-section h2, .prompts-section h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            /* Single column layout for mobile */
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            /* Mobile-optimized form inputs */
+            .form-group input, .form-group select, .form-group textarea {
+                padding: 0.875rem;
+                font-size: 16px; /* Prevents zoom on iOS */
+                border-radius: 10px;
+            }
+            
+            .form-group label {
+                font-size: 0.85rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            /* Mobile button styling */
+            .btn {
+                width: 100%;
+                padding: 1rem;
+                font-size: 1rem;
+                border-radius: 10px;
+                margin-top: 1rem;
+            }
+            
+            /* Mobile prompt cards */
+            .prompt-card {
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+                border-radius: 12px;
+            }
+            
+            .prompt-card h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .prompt-card p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            
+            .copy-btn {
+                width: 100%;
+                padding: 0.75rem;
+                font-size: 0.9rem;
+                border-radius: 8px;
+                margin-top: 1rem;
+            }
+        }
+
+        /* Small mobile devices (iPhone SE, etc.) */
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .form-section, .prompts-section {
+                padding: 1rem;
+                margin: 0 0 1.5rem 0;
+            }
+            
+            .form-section h2, .prompts-section h2 {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+            
+            .form-grid {
+                gap: 1rem;
+            }
+            
+            .form-group input, .form-group select, .form-group textarea {
+                padding: 0.75rem;
+            }
+            
+            .prompt-card {
+                padding: 1rem;
+            }
+            
+            .prompt-card h3 {
+                font-size: 1rem;
+            }
+            
+            .prompt-card p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Tablet landscape mode */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .container {
+                padding: 0 2rem;
+            }
+        }
+
+        /* Touch-friendly interactions */
+        @media (hover: none) and (pointer: coarse) {
+            .btn:hover, .copy-btn:hover {
+                transform: none;
+            }
+            
+            .btn:active, .copy-btn:active {
+                transform: scale(0.98);
+            }
+            
+            .form-section:hover, .prompt-card:hover {
+                transform: none;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header section with branding -->
+    <header class="header">
+        <h1>GlowCare</h1>
+        <p>AI-Powered Skin Care Product Selecter</p>
+    </header>
+
+    <div class="container">
+        <!-- Main form section for collecting user input -->
+        <section class="form-section">
+            <h2>Create Your Personalized Skin Care Prompts</h2>
+            
+            <form id="promptForm">
+                <div class="form-grid">
+                    <!-- Basic user information -->
+                    <div class="form-group">
+                        <label for="skinType">Skin Type:</label>
+                        <select id="skinType" name="skinType" required>
+                            <option value="">Select your skin type</option>
+                            <option value="normal">Normal</option>
+                            <option value="dry">Dry</option>
+                            <option value="oily">Oily</option>
+                            <option value="combination">Combination</option>
+                            <option value="sensitive">Sensitive</option>
+                        </select>
+                    </div>
+
+                    <!-- Age range for targeted recommendations -->
+                    <div class="form-group">
+                        <label for="ageRange">Age Range:</label>
+                        <select id="ageRange" name="ageRange" required>
+                            <option value="">Select your age range</option>
+                            <option value="teen">13-19 (Teen)</option>
+                            <option value="young-adult">20-29 (Young Adult)</option>
+                            <option value="adult">30-39 (Adult)</option>
+                            <option value="middle-age">40-49 (Middle Age)</option>
+                            <option value="mature">50+ (Mature)</option>
+                        </select>
+                    </div>
+
+                    <!-- Primary skin concerns -->
+                    <div class="form-group">
+                        <label for="skinConcerns">Primary Skin Concerns:</label>
+                        <select id="skinConcerns" name="skinConcerns" required>
+                            <option value="">Select primary concern</option>
+                            <option value="acne">Acne & Breakouts</option>
+                            <option value="aging">Anti-aging & Wrinkles</option>
+                            <option value="hyperpigmentation">Dark Spots & Hyperpigmentation</option>
+                            <option value="dryness">Dryness & Dehydration</option>
+                            <option value="sensitivity">Sensitivity & Irritation</option>
+                            <option value="pores">Large Pores</option>
+                            <option value="dullness">Dullness & Uneven Texture</option>
+                        </select>
+                    </div>
+
+                    <!-- Budget considerations -->
+                    <div class="form-group">
+                        <label for="budget">Budget Range:</label>
+                        <select id="budget" name="budget" required>
+                            <option value="">Select budget range</option>
+                            <option value="budget">Budget-friendly ($0-$50)</option>
+                            <option value="mid-range">Mid-range ($50-$150)</option>
+                            <option value="premium">Premium ($150-$300)</option>
+                            <option value="luxury">Luxury ($300+)</option>
+                        </select>
+                    </div>
+
+                    <!-- Preferred product types -->
+                    <div class="form-group">
+                        <label for="productPreference">Product Preference:</label>
+                        <select id="productPreference" name="productPreference" required>
+                            <option value="">Select preference</option>
+                            <option value="natural">Natural & Organic</option>
+                            <option value="clinical">Clinical & Medical Grade</option>
+                            <option value="k-beauty">K-Beauty & Asian Skincare</option>
+                            <option value="western">Western Brands</option>
+                            <option value="indie">Indie & Small Brands</option>
+                            <option value="pharmacy">Pharmacy & Drugstore</option>
+                        </select>
+                    </div>
+
+                    <!-- Routine complexity -->
+                    <div class="form-group">
+                        <label for="routineComplexity">Routine Complexity:</label>
+                        <select id="routineComplexity" name="routineComplexity" required>
+                            <option value="">Select routine complexity</option>
+                            <option value="minimal">Minimal (3-5 steps)</option>
+                            <option value="moderate">Moderate (6-8 steps)</option>
+                            <option value="extensive">Extensive (9+ steps)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Additional preferences textarea -->
+                <div class="form-group">
+                    <label for="additionalNotes">Additional Notes & Preferences:</label>
+                    <textarea id="additionalNotes" name="additionalNotes" rows="4" placeholder="Any specific ingredients to avoid, allergies, or particular products you're interested in..."></textarea>
+                </div>
+
+                <!-- Submit button -->
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="submit" class="btn">Generate Personalized Prompts</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Loading animation -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Generating your personalized skin care prompts...</p>
+        </div>
+
+        <!-- Generated prompts display section -->
+        <section class="prompts-section" id="promptsSection" style="display: none;">
+            <h2>Your Personalized Skin Care Prompts</h2>
+            <div id="promptsContainer"></div>
+        </section>
+    </div>
+
+    <script>
+        // Main application object to organize code
+        const SkinCarePromptGenerator = {
+            // Initialize the application
+            init() {
+                this.bindEvents();
+                this.setupFormValidation();
+            },
+
+            // Bind event listeners to form elements
+            bindEvents() {
+                const form = document.getElementById('promptForm');
+                form.addEventListener('submit', this.handleFormSubmit.bind(this));
+            },
+
+            // Set up form validation (can be expanded)
+            setupFormValidation() {
+                // Add real-time validation feedback if needed
+                const inputs = document.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('change', this.validateField.bind(this));
+                });
+            },
+
+            // Validate individual form fields
+            validateField(event) {
+                const field = event.target;
+                // Add custom validation logic here
+                if (field.hasAttribute('required') && !field.value) {
+                    field.style.borderColor = '#e53e3e';
+                } else {
+                    field.style.borderColor = '#e2e8f0';
+                }
+            },
+
+            // Handle form submission
+            handleFormSubmit(event) {
+                event.preventDefault();
+                
+                // Show loading animation
+                this.showLoading();
+                
+                // Get form data
+                const formData = this.getFormData();
+                
+                // Simulate API call delay (replace with actual API call)
+                setTimeout(() => {
+                    const prompts = this.generatePrompts(formData);
+                    this.displayPrompts(prompts);
+                    this.hideLoading();
+                }, 2000);
+            },
+
+            // Extract form data into object
+            getFormData() {
+                const form = document.getElementById('promptForm');
+                const formData = new FormData(form);
+                const data = {};
+                
+                // Convert FormData to regular object
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+                
+                return data;
+            },
+
+            // Generate prompts based on user input
+            generatePrompts(data) {
+                // This is where the main prompt generation logic happens
+                // Based on user selections, create targeted prompts
+                
+                const prompts = [];
+                
+                // Product recommendation prompt
+                prompts.push({
+                    title: "Product Recommendation Prompt",
+                    content: `I have ${data.skinType} skin and I'm in the ${data.ageRange} age range. My primary concern is ${data.skinConcerns}. I prefer ${data.productPreference} products with a ${data.budget} budget. I want a ${data.routineComplexity} skincare routine. ${data.additionalNotes ? 'Additional notes: ' + data.additionalNotes : ''} Please recommend specific products with explanations of why they would work for my skin type and concerns.`
+                });
+                
+                // Routine building prompt
+                prompts.push({
+                    title: "Skincare Routine Building Prompt",
+                    content: `Create a comprehensive ${data.routineComplexity} skincare routine for someone with ${data.skinType} skin who is ${data.ageRange} years old. The routine should address ${data.skinConcerns} and fit within a ${data.budget} budget. Focus on ${data.productPreference} products. Include morning and evening routines with step-by-step instructions and explain the purpose of each step.`
+                });
+                
+                // Ingredient analysis prompt
+                prompts.push({
+                    title: "Ingredient Analysis Prompt",
+                    content: `I have ${data.skinType} skin and my main concern is ${data.skinConcerns}. What are the best active ingredients I should look for in skincare products? Also, what ingredients should I avoid? Please explain how these ingredients work and provide guidance on how to introduce them safely into my routine. Consider my age range: ${data.ageRange}.`
+                });
+                
+                // Problem-solving prompt
+                prompts.push({
+                    title: "Skin Issue Problem-Solving Prompt",
+                    content: `I'm dealing with ${data.skinConcerns} on my ${data.skinType} skin. I'm ${data.ageRange} and prefer ${data.productPreference} products. My current routine complexity is ${data.routineComplexity}. What could be causing this issue and what specific steps can I take to address it? Include both product recommendations and lifestyle factors.`
+                });
+                
+                // Seasonal adjustment prompt
+                prompts.push({
+                    title: "Seasonal Skincare Adjustment Prompt",
+                    content: `How should I adjust my skincare routine for different seasons? I have ${data.skinType} skin, I'm ${data.ageRange}, and my main concern is ${data.skinConcerns}. I prefer ${data.productPreference} products and like ${data.routineComplexity} routines. What changes should I make for summer vs. winter skincare?`
+                });
+                
+                return prompts;
+            },
+
+            // Enhanced mobile-optimized prompt display
+            displayPrompts(prompts) {
+                const container = document.getElementById('promptsContainer');
+                const section = document.getElementById('promptsSection');
+                
+                // Clear previous results
+                container.innerHTML = '';
+                
+                // Create prompt cards
+                prompts.forEach((prompt, index) => {
+                    const promptCard = this.createPromptCard(prompt, index);
+                    container.appendChild(promptCard);
+                });
+                
+                // Show the prompts section
+                section.style.display = 'block';
+                
+                // Mobile-optimized smooth scroll
+                if (this.isMobile()) {
+                    // Add slight delay for better mobile experience
+                    setTimeout(() => {
+                        section.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'start' 
+                        });
+                    }, 100);
+                } else {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                }
+            },
+
+            // Create individual prompt card elements with mobile optimizations
+            createPromptCard(prompt, index) {
+                const card = document.createElement('div');
+                card.className = 'prompt-card';
+                
+                // Escape quotes properly for mobile
+                const escapedContent = prompt.content.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                
+                card.innerHTML = `
+                    <h3>${prompt.title}</h3>
+                    <p>${prompt.content}</p>
+                    <button class="copy-btn" onclick="SkinCarePromptGenerator.copyToClipboard(\`${escapedContent}\`, this)">
+                        Copy Prompt
+                    </button>
+                `;
+                return card;
+            },
+
+            // Enhanced mobile-friendly copy functionality
+            copyToClipboard(text, button) {
+                // Use modern clipboard API if available
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        this.showCopyFeedback(button);
+                        // Mobile haptic feedback
+                        if (this.isMobile() && navigator.vibrate) {
+                            navigator.vibrate(100);
+                        }
+                    }).catch(() => {
+                        // Fallback for mobile browsers that don't support clipboard API
+                        this.fallbackCopyToClipboard(text, button);
+                    });
+                } else {
+                    // Fallback for older browsers and mobile
+                    this.fallbackCopyToClipboard(text, button);
+                }
+            },
+
+            // Fallback copy method for mobile browsers
+            fallbackCopyToClipboard(text, button) {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    this.showCopyFeedback(button);
+                    // Mobile haptic feedback
+                    if (this.isMobile() && navigator.vibrate) {
+                        navigator.vibrate(100);
+                    }
+                } catch (err) {
+                    console.error('Copy failed:', err);
+                    button.textContent = 'Copy failed';
+                    button.style.background = '#e53e3e';
+                    setTimeout(() => {
+                        button.textContent = 'Copy Prompt';
+                        button.style.background = '#48bb78';
+                    }, 2000);
+                }
+                
+                document.body.removeChild(textArea);
+            },
+
+            // Show visual feedback when prompt is copied
+            showCopyFeedback(button) {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#48bb78';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#48bb78';
+                }, 2000);
+            },
+
+            // Show loading animation
+            showLoading() {
+                document.getElementById('loading').classList.add('show');
+            },
+
+            // Hide loading animation
+            hideLoading() {
+                document.getElementById('loading').classList.remove('show');
+            }
+        };
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            SkinCarePromptGenerator.init();
+        });
+    </script>
+</body>
+</html>
